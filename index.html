@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emploi du temps Q2 - Réservation</title>
+  <style>
+    table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+    th { background-color: #981ADA; color: white; }
+    td.cours { cursor: pointer; background-color: #e0d4f7; }
+    #reservation {
+      display: none;
+      width: 300px;
+      margin: 20px auto;
+      padding: 15px;
+      border: 2px solid #981ADA;
+      background-color: #f8f0fd;
+    }
+    #places button {
+      margin: 5px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    #places button.reserved {
+      background-color: red;
+      color: white;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Emploi du temps Q2</h1>
+  <table>
+    <tr>
+      <th>Jour</th>
+      <th>Horaire</th>
+      <th>Matière</th>
+    </tr>
+    <tr><td>Lundi</td><td>9h - 10h</td><td class="cours" data-jour="Lundi" data-horaire="9h-10h" data-matiere="Maths">Maths</td></tr>
+    <tr><td>Lundi</td><td>14h - 15h</td><td class="cours" data-jour="Lundi" data-horaire="14h-15h" data-matiere="Italien">Italien</td></tr>
+    <tr><td>Lundi</td><td>15h - 16h</td><td class="cours" data-jour="Lundi" data-horaire="15h-16h" data-matiere="Technologie">Technologie</td></tr>
+    <tr><td>Mardi</td><td>10h - 11h</td><td class="cours" data-jour="Mardi" data-horaire="10h-11h" data-matiere="Anglais">Anglais</td></tr>
+    <tr><td>Mercredi</td><td>8h - 9h</td><td class="cours" data-jour="Mercredi" data-horaire="8h-9h" data-matiere="Anglais">Anglais</td></tr>
+    <tr><td>Mercredi</td><td>9h - 10h</td><td class="cours" data-jour="Mercredi" data-horaire="9h-10h" data-matiere="Latin">Latin</td></tr>
+    <tr><td>Mercredi</td><td>11h - 12h</td><td class="cours" data-jour="Mercredi" data-horaire="11h-12h" data-matiere="Italien">Italien</td></tr>
+    <tr><td>Jeudi</td><td>8h - 9h</td><td class="cours" data-jour="Jeudi" data-horaire="8h-9h" data-matiere="Anglais">Anglais</td></tr>
+    <tr><td>Jeudi</td><td>9h - 10h</td><td class="cours" data-jour="Jeudi" data-horaire="9h-10h" data-matiere="Maths">Maths</td></tr>
+    <tr><td>Jeudi</td><td>13h - 14h</td><td class="cours" data-jour="Jeudi" data-horaire="13h-14h" data-matiere="Musique">Musique</td></tr>
+    <tr><td>Vendredi</td><td>10h - 11h</td><td class="cours" data-jour="Vendredi" data-horaire="10h-11h" data-matiere="Maths">Maths</td></tr>
+  </table>
+
+  <div id="reservation">
+    <h3>Réserve ta place</h3>
+    <p id="infoCours"></p>
+    <label>Ton nom : <input type="text" id="nom" /></label>
+    <div id="places">
+      <p>Choisis ta place :</p>
+      <button data-place="2 devant">2 devant</button>
+      <button data-place="1 à côté">1 à côté</button>
+      <button data-place="2 derrière">2 derrière</button>
+    </div>
+    <button id="valider">Valider la réservation</button>
+    <button id="annuler">Annuler</button>
+    <p id="message" style="color: green;"></p>
+  </div>
+
+  <script>
+    const coursElements = document.querySelectorAll('td.cours');
+    const reservationDiv = document.getElementById('reservation');
+    const infoCours = document.getElementById('infoCours');
+    const nomInput = document.getElementById('nom');
+    const placesDiv = document.getElementById('places');
+    const message = document.getElementById('message');
+    const validerBtn = document.getElementById('valider');
+    const annulerBtn = document.getElementById('annuler');
+
+    let coursSelectionne = null;
+    let placeSelectionnee = null;
+
+    // Stockage des réservations dans localStorage
+    // Clé = jour+horaire+place, valeur = nom
+
+    coursElements.forEach(cours => {
+      cours.addEventListener('click', () => {
+        coursSelectionne = cours.dataset;
+        infoCours.textContent = `Cours : ${coursSelectionne.matiere} - ${coursSelectionne.jour} ${coursSelectionne.horaire}`;
+        nomInput.value = '';
+        message.textContent = '';
+        placeSelectionnee = null;
+        // Reset styles des boutons
+        placesDiv.querySelectorAll('button').forEach(btn => {
+          btn.classList.remove('reserved');
+          btn.disabled = false;
+        });
+        // Marquer places déjà réservées
+        placesDiv.querySelectorAll('button').forEach(btn => {
+          const key = `${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
+          const reserv = localStorage.getItem(key);
+          if (reserv) {
+            btn.classList.add('reserved');
+            btn.textContent = btn.dataset.place + " (Réservé par " + reserv + ")";
+            btn.disabled = true;
+          } else {
+            btn.textContent = btn.dataset.place;
+          }
+        });
+        reservationDiv.style.display = 'block';
+      });
+    });
+
+    placesDiv.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('reserved')) return;
+        placeSelectionnee = btn.dataset.place;
+        // Visuel sélection
+        placesDiv.querySelectorAll('button').forEach(b => b.style.border = '');
+        btn.style.border = '2px solid #981ADA';
+      });
+    });
+
+    validerBtn.addEventListener('click', () => {
+      const nom = nomInput.value.trim();
+      if (!nom) {
+        alert("Merci de saisir ton nom.");
+        return;
+      }
+      if (!placeSelectionnee) {
+        alert("Merci de choisir une place.");
+        return;
+      }
+      const key = `${coursSelectionne.jour}_${coursSelectionne.horaire}_${placeSelectionnee}`;
+      if (localStorage.getItem(key)) {
+        alert("Cette place est déjà réservée.");
+        return;
+      }
+      localStorage.setItem(key, nom);
+      message.textContent = "Réservation enregistrée !";
+      // Bloquer la place réservée
+      placesDiv.querySelectorAll('button').forEach(btn => {
+        if (btn.dataset.place === placeSelectionnee) {
+          btn.classList.add('reserved');
+          btn.textContent = placeSelectionnee + " (Réservé par " + nom + ")";
+          btn.disabled = true;
+          btn.style.border = '';
+        }
+      });
+      nomInput.value = '';
+      placeSelectionnee = null;
+    });
+
+    annulerBtn.addEventListener('click', () => {
+      reservationDiv.style.display = 'none';
+      message.textContent = '';
+    });
+  </script>
+</body>
+</html>
