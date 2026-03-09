@@ -1,316 +1,308 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Réservation Emploi du Temps Q1/Q2</title>
-  <style>
-    body {
-  font-family: Arial, sans-serif;
-  max-width: 900px;
-  margin: 20px auto;
-  font-size: 16px; /* taille de base */
-}
-
-h1 {
-  text-align: center;
-  color: #981ADA;
-  max-width: 600px;    /* Limite la largeur du titre */
-  margin: 0 auto 20px; /* Centre et ajoute un espace en bas */
-  word-wrap: break-word; /* Permet au texte de revenir à la ligne si trop long */
-  font-size: 24px;     /* Taille raisonnable du texte */
-}
-
+<title>Réservation Emploi du Temps Q1/Q2</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; }
+h1 { text-align: center; color: #981ADA; }
 #connexion, #choixQ {
-  margin: 10px auto;
-  padding: 10px;
-  border: 2px solid #981ADA;
-  background: #f8f0fd;
-  width: 320px;
-  max-width: 90vw; /* limite largeur pour petits écrans */
-  text-align: center;
-  font-size: 16px;
+margin: 10px auto; padding: 10px; border: 2px solid #981ADA; background: #f8f0fd; width: 320px; text-align: center;
+}
+label { margin-right: 10px; }
+button { padding: 6px 12px; margin-left: 10px; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+th { background-color: #981ADA; color: white; }
+td.cours { cursor: pointer; background-color: #e0d4f7; }
+#reservation {
+display: none;
+border: 2px solid #981ADA; background: #f8f0fd; padding: 15px; margin-top: 20px;
+max-width: 400px;
+}
+#places button {
+margin: 5px;
+padding: 8px 12px;
+cursor: pointer;
+}
+#places button.reserved {
+background-color: red;
+color: white;
+cursor: default;
+}
+#message { color: green; margin-top: 10px; }
+#annulerResa {
+margin-top: 10px; background: #981ADA; color: white; border: none; padding: 8px 12px; cursor: pointer;
+display: none;
 }
 
-button {
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
+/* CSS responsive */
 @media (max-width: 600px) {
-  body {
-    margin: 10px 5px;
-    max-width: 100%;
-    font-size: 16px; /* garde taille stable */
-  }
-  #connexion, #choixQ, #reservation {
-    width: 100% !important;
-    box-sizing: border-box;
-    padding: 15px !important;
-    font-size: 16px; /* taille stable */
-  }
-  label, input, select, button {
-    font-size: 16px; /* pas trop gros */
-  }
-  input[type="text"], select {
-    width: 100% !important;
-    padding: 10px !important;
-    margin-top: 6px;
-    margin-bottom: 12px;
-  }
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    font-size: 16px; /* taille stable */
-  }
-  th, td {
-    padding: 14px 8px;
-  }
-  button {
-    padding: 12px 18px;
-    font-size: 16px;
-  }
-  #places button {
-    display: block;
-    margin: 10px 0;
-    width: 100%;
-  }
-    }
-  </style>
+body {
+margin: 10px 5px;
+max-width: 100%;
+font-size: 18px; /* un peu plus grand */
+}
+#connexion, #choixQ, #reservation {
+width: 100% !important;
+box-sizing: border-box;
+padding: 15px !important; /* plus d’espace à l’intérieur */
+font-size: 18px;
+}
+label, input, select, button {
+font-size: 18px !important;
+}
+input[type="text"], select {
+width: 100% !important;
+padding: 10px !important;
+margin-top: 6px;
+margin-bottom: 12px;
+}
+table {
+display: block;
+overflow-x: auto;
+white-space: nowrap;
+font-size: 18px; /* texte plus grand dans le tableau */
+}
+th, td {
+padding: 14px 8px;
+}
+button {
+padding: 14px 20px;
+font-size: 18px;
+}
+#places button {
+display: block;
+margin: 10px 0;
+width: 100%;
+}
+}
+</style>
 </head>
 <body>
-  <h1>Réservation Emploi du Temps Q1/Q2</h1>
+<h1>Réservation Emploi du Temps Q1/Q2</h1>
 
-  <div id="connexion">
-    <label>Ton identifiant : <input type="text" id="identifiant" /></label>
-    <button id="btnConnect">Se connecter</button>
-    <p id="userAffiche" style="margin-top:10px; font-weight:bold;"></p>
-  </div>
+<div id="connexion">
+<label>Ton identifiant : <input type="text" id="identifiant" /></label>
+<button id="btnConnect">Se connecter</button>
+<p id="userAffiche" style="margin-top:10px; font-weight:bold;"></p>
+</div>
 
-  <div id="choixQ" style="display:none;">
-    <label for="choix">Choisis ton trimestre :</label>
-    <select id="choix">
-      <option value="Q1">Q1</option>
-      <option value="Q2" selected>Q2</option>
-    </select>
-  </div>
+<div id="choixQ" style="display:none;">
+<label for="choix">Choisis ton trimestre :</label>
+<select id="choix">
+<option value="Q1">Q1</option>
+<option value="Q2" selected>Q2</option>
+</select>
+</div>
 
-  <div id="emploiTemps"></div>
+<div id="emploiTemps"></div>
 
-  <div id="reservation">
-    <h3>Réserver ta place</h3>
-    <p id="infoCours"></p>
-    <div id="places">
-      <p>Choisis ta place :</p>
-      <button data-place="2 devant">2 devant</button>
-      <button data-place="1 à côté">1 à côté</button>
-      <button data-place="2 derrière">2 derrière</button>
-    </div>
-    <button id="valider">Valider la réservation</button>
-    <button id="annuler">Annuler</button>
-    <button id="annulerResa">Annuler ma réservation</button>
-    <p id="message"></p>
-  </div>
+<div id="reservation">
+<h3>Réserver ta place</h3>
+<p id="infoCours"></p>
+<div id="places">
+<p>Choisis ta place :</p>
+<button data-place="2 devant">2 devant</button>
+<button data-place="1 à côté">1 à côté</button>
+<button data-place="2 derrière">2 derrière</button>
+</div>
+<button id="valider">Valider la réservation</button>
+<button id="annuler">Annuler</button>
+<button id="annulerResa">Annuler ma réservation</button>
+<p id="message"></p>
+</div>
 
 <script>
-
-  // Données des emplois du temps Q1 et Q2 (exemple simplifié)
+// Données des emplois du temps Q1 et Q2 (exemple simplifié)
 const emplois = {
-  Q1: [
-    {jour:"Lundi", horaire:"9h-10h", matiere:"Maths"},
-    {jour:"Lundi", horaire:"14h-15h", matiere:"Français"},
-    {jour:"Mardi", horaire:"10h-11h", matiere:"Anglais"},
-    {jour:"Mercredi", horaire:"8h-9h", matiere:"Anglais"},
-    {jour:"Mercredi", horaire:"9h-10h", matiere:"Latin"},
-    {jour:"Jeudi", horaire:"8h-9h", matiere:"Anglais"},
-    {jour:"Jeudi", horaire:"9h-10h", matiere:"Maths"},
-    {jour:"Vendredi", horaire:"10h-11h", matiere:"Maths"}
-  ],
-  Q2: [
-    {jour:"Lundi", horaire:"9h-10h", matiere:"Maths"},
-    {jour:"Lundi", horaire:"14h-15h", matiere:"Italien"},
-    {jour:"Mardi", horaire:"10h-11h", matiere:"Anglais"},
-    {jour:"Mercredi", horaire:"8h-9h", matiere:"Anglais"},
-    {jour:"Mercredi", horaire:"9h-10h", matiere:"Latin"},
-    {jour:"Jeudi", horaire:"8h-9h", matiere:"Anglais"},
-    {jour:"Jeudi", horaire:"9h-10h", matiere:"Maths"},
-    {jour:"Jeudi", horaire:"13h-14h", matiere:"Musique"},
-    {jour:"Vendredi", horaire:"10h-11h", matiere:"Maths"}
-  ]
+Q1: [
+{jour:"Lundi", horaire:"9h-10h", matiere:"Maths"},
+{jour:"Lundi", horaire:"14h-15h", matiere:"Français"},
+{jour:"Mardi", horaire:"10h-11h", matiere:"Anglais"},
+{jour:"Mercredi", horaire:"8h-9h", matiere:"Anglais"},
+{jour:"Mercredi", horaire:"9h-10h", matiere:"Latin"},
+{jour:"Jeudi", horaire:"8h-9h", matiere:"Anglais"},
+{jour:"Jeudi", horaire:"9h-10h", matiere:"Maths"},
+{jour:"Vendredi", horaire:"10h-11h", matiere:"Maths"}
+],
+Q2: [
+{jour:"Lundi", horaire:"9h-10h", matiere:"Maths"},
+{jour:"Lundi", horaire:"14h-15h", matiere:"Italien"},
+{jour:"Mardi", horaire:"10h-11h", matiere:"Anglais"},
+{jour:"Mercredi", horaire:"8h-9h", matiere:"Anglais"},
+{jour:"Mercredi", horaire:"9h-10h", matiere:"Latin"},
+{jour:"Jeudi", horaire:"8h-9h", matiere:"Anglais"},
+{jour:"Jeudi", horaire:"9h-10h", matiere:"Maths"},
+{jour:"Jeudi", horaire:"13h-14h", matiere:"Musique"},
+{jour:"Vendredi", horaire:"10h-11h", matiere:"Maths"}
+]
 };
 
-  const connexionDiv = document.getElementById('connexion');
-  const identifiantInput = document.getElementById('identifiant');
-  const btnConnect = document.getElementById('btnConnect');
-  const userAffiche = document.getElementById('userAffiche');
-  const choixQDiv = document.getElementById('choixQ');
-  const choixSelect = document.getElementById('choix');
-  const emploiTempsDiv = document.getElementById('emploiTemps');
-  const reservationDiv = document.getElementById('reservation');
-  const infoCours = document.getElementById('infoCours');
-  const placesDiv = document.getElementById('places');
-  const validerBtn = document.getElementById('valider');
-  const annulerBtn = document.getElementById('annuler');
-  const annulerResaBtn = document.getElementById('annulerResa');
-  const messageP = document.getElementById('message');
+const connexionDiv = document.getElementById('connexion');
+const identifiantInput = document.getElementById('identifiant');
+const btnConnect = document.getElementById('btnConnect');
+const userAffiche = document.getElementById('userAffiche');
+const choixQDiv = document.getElementById('choixQ');
+const choixSelect = document.getElementById('choix');
+const emploiTempsDiv = document.getElementById('emploiTemps');
+const reservationDiv = document.getElementById('reservation');
+const infoCours = document.getElementById('infoCours');
+const placesDiv = document.getElementById('places');
+const validerBtn = document.getElementById('valider');
+const annulerBtn = document.getElementById('annuler');
+const annulerResaBtn = document.getElementById('annulerResa');
+const messageP = document.getElementById('message');
 
-  let utilisateur = null; // identifiant connecté
-  let coursSelectionne = null;
-  let placeSelectionnee = null;
+let utilisateur = null; // identifiant connecté
+let coursSelectionne = null;
+let placeSelectionnee = null;
 
-  // Fonction pour construire le tableau emploi du temps selon Q1/Q2
-  function afficherEmploi(trimestre) {
-    const data = emplois[trimestre];
-    let html = '<table><tr><th>Jour</th><th>Horaire</th><th>Matière</th></tr>';
-    data.forEach(cours => {
-      html += `<tr>
-        <td>${cours.jour}</td>
-        <td>${cours.horaire}</td>
-        <td class="cours" data-jour="${cours.jour}" data-horaire="${cours.horaire}" data-matiere="${cours.matiere}">${cours.matiere}</td>
-      </tr>`;
-    });
-    html += '</table>';
-    emploiTempsDiv.innerHTML = html;
+// Fonction pour construire le tableau emploi du temps selon Q1/Q2
+function afficherEmploi(trimestre) {
+const data = emplois[trimestre];
+let html = '<table><tr><th>Jour</th><th>Horaire</th><th>Matière</th></tr>';
+data.forEach(cours => {
+html += `<tr>
+<td>${cours.jour}</td>
+<td>${cours.horaire}</td>
+<td class="cours" data-jour="${cours.jour}" data-horaire="${cours.horaire}" data-matiere="${cours.matiere}">${cours.matiere}</td>
+</tr>`;
+});
+html += '</table>';
+emploiTempsDiv.innerHTML = html;
 
-    // Ajouter les événements clic sur les cours
-    document.querySelectorAll('td.cours').forEach(c => {
-      c.addEventListener('click', () => {
-        if (!utilisateur) {
-          alert('Tu dois te connecter avant de réserver.');
-          return;
-        }
-        coursSelectionne = c.dataset;
-        infoCours.textContent = `Cours : ${coursSelectionne.matiere} - ${coursSelectionne.jour} ${coursSelectionne.horaire}`;
-        messageP.textContent = '';
-        placeSelectionnee = null;
+// Ajouter les événements clic sur les cours
+document.querySelectorAll('td.cours').forEach(c => {
+c.addEventListener('click', () => {
+if (!utilisateur) {
+alert('Tu dois te connecter avant de réserver.');
+return;
+}
+coursSelectionne = c.dataset;
+infoCours.textContent = `Cours : ${coursSelectionne.matiere} - ${coursSelectionne.jour} ${coursSelectionne.horaire}`;
+messageP.textContent = '';
+placeSelectionnee = null;
 
-        // Reset boutons places
-        placesDiv.querySelectorAll('button').forEach(btn => {
-          btn.classList.remove('reserved');
-          btn.disabled = false;
-          btn.style.border = '';
-          btn.textContent = btn.dataset.place;
-        });
+// Reset boutons places
+placesDiv.querySelectorAll('button').forEach(btn => {
+btn.classList.remove('reserved');
+btn.disabled = false;
+btn.style.border = '';
+btn.textContent = btn.dataset.place;
+});
 
-        // Afficher réservations existantes
-        placesDiv.querySelectorAll('button').forEach(btn => {
-          const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
-          const reserv = localStorage.getItem(key);
-          if (reserv) {
-            btn.classList.add('reserved');
-            btn.textContent = btn.dataset.place + " (Réservé par " + reserv + ")";
-            btn.disabled = true;
-          }
-        });
+// Afficher réservations existantes
+placesDiv.querySelectorAll('button').forEach(btn => {
+const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
+const reserv = localStorage.getItem(key);
+if (reserv) {
+btn.classList.add('reserved');
+btn.textContent = btn.dataset.place + " (Réservé par " + reserv + ")";
+btn.disabled = true;
+}
+});
 
-        // Vérifier si utilisateur a une réservation sur ce cours pour afficher bouton annulation
-        let userHasResa = false;
-        placesDiv.querySelectorAll('button').forEach(btn => {
-          const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
-          const reserv = localStorage.getItem(key);
-          if (reserv === utilisateur) userHasResa = true;
-        });
-        annulerResaBtn.style.display = userHasResa ? 'inline-block' : 'none';
+// Vérifier si utilisateur a une réservation sur ce cours pour afficher bouton annulation
+let userHasResa = false;
+placesDiv.querySelectorAll('button').forEach(btn => {
+const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
+const reserv = localStorage.getItem(key);
+if (reserv === utilisateur) userHasResa = true;
+});
+annulerResaBtn.style.display = userHasResa ? 'inline-block' : 'none';
 
-        reservationDiv.style.display = 'block';
-      });
-    });
-  }
+reservationDiv.style.display = 'block';
+});
+});
+}
 
-  // Connexion
-  btnConnect.addEventListener('click', () => {
-    const id = identifiantInput.value.trim();
-    if (!id) {
-      alert('Merci de saisir un identifiant.');
-      return;
-    }
-    utilisateur = id;
-    userAffiche.textContent = `Connecté en tant que : ${utilisateur}`;
-    connexionDiv.style.display = 'none';
-    choixQDiv.style.display = 'block';
-    afficherEmploi(choixSelect.value);
-  });
+// Connexion
+btnConnect.addEventListener('click', () => {
+const id = identifiantInput.value.trim();
+if (!id) {
+alert('Merci de saisir un identifiant.');
+return;
+}
+utilisateur = id;
+userAffiche.textContent = `Connecté en tant que : ${utilisateur}`;
+connexionDiv.style.display = 'none';
+choixQDiv.style.display = 'block';
+afficherEmploi(choixSelect.value);
+});
 
-  // Changement de trimestre
-  choixSelect.addEventListener('change', () => {
-    reservationDiv.style.display = 'none';
-    afficherEmploi(choixSelect.value);
-  });
+// Changement de trimestre
+choixSelect.addEventListener('change', () => {
+reservationDiv.style.display = 'none';
+afficherEmploi(choixSelect.value);
+});
 
-  // Choix place
-  placesDiv.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (btn.classList.contains('reserved')) return;
-      placeSelectionnee = btn.dataset.place;
-      placesDiv.querySelectorAll('button').forEach(b => b.style.border = '');
-      btn.style.border = '2px solid #981ADA';
-      messageP.textContent = '';
-    });
-  });
+// Choix place
+placesDiv.querySelectorAll('button').forEach(btn => {
+btn.addEventListener('click', () => {
+if (btn.classList.contains('reserved')) return;
+placeSelectionnee = btn.dataset.place;
+placesDiv.querySelectorAll('button').forEach(b => b.style.border = '');
+btn.style.border = '2px solid #981ADA';
+messageP.textContent = '';
+});
+});
 
-  // Valider réservation
-  validerBtn.addEventListener('click', () => {
-    if (!placeSelectionnee) {
-      alert('Merci de choisir une place.');
-      return;
-    }
-    const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${placeSelectionnee}`;
-    if (localStorage.getItem(key)) {
-      alert('Cette place est déjà réservée.');
-      return;
-    }
-    localStorage.setItem(key, utilisateur);
-    messageP.textContent = 'Réservation enregistrée !';
+// Valider réservation
+validerBtn.addEventListener('click', () => {
+if (!placeSelectionnee) {
+alert('Merci de choisir une place.');
+return;
+}
+const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${placeSelectionnee}`;
+if (localStorage.getItem(key)) {
+alert('Cette place est déjà réservée.');
+return;
+}
+localStorage.setItem(key, utilisateur);
+messageP.textContent = 'Réservation enregistrée !';
 
-    // Actualiser les boutons
-    placesDiv.querySelectorAll('button').forEach(btn => {
-      if (btn.dataset.place === placeSelectionnee) {
-        btn.classList.add('reserved');
-        btn.textContent = placeSelectionnee + " (Réservé par " + utilisateur + ")";
-        btn.disabled = true;
-        btn.style.border = '';
-      }
-    });
-    placeSelectionnee = null;
-    annulerResaBtn.style.display = 'inline-block';
-  });
+// Actualiser les boutons
+placesDiv.querySelectorAll('button').forEach(btn => {
+if (btn.dataset.place === placeSelectionnee) {
+btn.classList.add('reserved');
+btn.textContent = placeSelectionnee + " (Réservé par " + utilisateur + ")";
+btn.disabled = true;
+btn.style.border = '';
+}
+});
+placeSelectionnee = null;
+annulerResaBtn.style.display = 'inline-block';
+});
 
-  // Annuler réservation (bouton dans fenêtre réservation)
-  annulerResaBtn.addEventListener('click', () => {
-    if (!coursSelectionne) return;
-    let annule = false;
-    placesDiv.querySelectorAll('button').forEach(btn => {
-      const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
-      if (localStorage.getItem(key) === utilisateur) {
-        localStorage.removeItem(key);
-        btn.classList.remove('reserved');
-        btn.textContent = btn.dataset.place;
-        btn.disabled = false;
-        annule = true;
-      }
-    });
-    if (annule) {
-      messageP.textContent = 'Ta réservation a été annulée.';
-      annulerResaBtn.style.display = 'none';
-    }
-  });
+// Annuler réservation (bouton dans fenêtre réservation)
+annulerResaBtn.addEventListener('click', () => {
+if (!coursSelectionne) return;
+let annule = false;
+placesDiv.querySelectorAll('button').forEach(btn => {
+const key = `${choixSelect.value}_${coursSelectionne.jour}_${coursSelectionne.horaire}_${btn.dataset.place}`;
+if (localStorage.getItem(key) === utilisateur) {
+localStorage.removeItem(key);
+btn.classList.remove('reserved');
+btn.textContent = btn.dataset.place;
+btn.disabled = false;
+annule = true;
+}
+});
+if (annule) {
+messageP.textContent = 'Ta réservation a été annulée.';
+annulerResaBtn.style.display = 'none';
+}
+});
 
-  // Annuler la fenêtre réservation
-  annulerBtn.addEventListener('click', () => {
-    reservationDiv.style.display = 'none';
-    messageP.textContent = '';
-    placeSelectionnee = null;
-  });
+// Annuler la fenêtre réservation
+annulerBtn.addEventListener('click', () => {
+reservationDiv.style.display = 'none';
+messageP.textContent = '';
+placeSelectionnee = null;
+});
 
 </script>
 
 </body>
-</html>
-
-
-
-
-
-
-
+</html> comme sa?
 
