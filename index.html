@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Réservation Emploi du Temps Q1/Q2</title>
   <style>
     body {
@@ -115,25 +113,7 @@ button {
   </div>
 
 <script>
-  // Fonction pour effacer toutes les réservations
-function resetReservations() {
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('Q1_') || key.startsWith('Q2_')) {
-      localStorage.removeItem(key);
-    }
-  });
-}
 
-// Vérification de la date de dernière réinitialisation
-const resetKey = 'dateDerniereReset';
-const now = Date.now();
-const resetInterval = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-
-let lastReset = localStorage.getItem(resetKey);
-if (!lastReset || now - lastReset > resetInterval) {
-  resetReservations();
-  localStorage.setItem(resetKey, now);
-}
   // Données des emplois du temps Q1 et Q2 (exemple simplifié)
 const emplois = {
   Q1: [
@@ -326,6 +306,7 @@ const emplois = {
 
 </body>
 </html>
+
 
 
 
