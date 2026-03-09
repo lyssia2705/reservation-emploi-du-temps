@@ -218,16 +218,17 @@ reservationDiv.style.display = 'block';
 
 // Connexion
 btnConnect.addEventListener('click', () => {
-const id = identifiantInput.value.trim();
-if (!id) {
-alert('Merci de saisir un identifiant.');
-return;
-}
-utilisateur = id;
-userAffiche.textContent = `Connecté en tant que : ${utilisateur}`;
-connexionDiv.style.display = 'none';
-choixQDiv.style.display = 'block';
-afficherEmploi(choixSelect.value);
+  const id = identifiantInput.value.trim();
+  if (!id) {
+    alert('Merci de saisir un identifiant.');
+    return;
+  }
+  utilisateur = id;
+  userAffiche.textContent = `Connecté en tant que : ${utilisateur}`;
+  connexionDiv.style.display = 'none';     // Cache la connexion
+  choixQDiv.style.display = 'block';       // Montre le choix trimestre
+  afficherEmploi(choixSelect.value);       // Affiche le tableau
+  emploiTempsDiv.style.display = 'block';  // Montre le tableau
 });
 
 // Changement de trimestre
@@ -305,4 +306,5 @@ placeSelectionnee = null;
 
 </body>
 </html> comme sa?
+
 
