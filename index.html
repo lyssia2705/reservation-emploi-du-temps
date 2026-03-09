@@ -3,78 +3,78 @@
 <head>
   <title>Réservation Emploi du Temps Q1/Q2</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; }
-    h1 { text-align: center; color: #981ADA; }
-    #connexion, #choixQ {
-      margin: 10px auto; padding: 10px; border: 2px solid #981ADA; background: #f8f0fd; width: 320px; text-align: center;
-    }
-    label { margin-right: 10px; }
-    button { padding: 6px 12px; margin-left: 10px; cursor: pointer; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
-    th { background-color: #981ADA; color: white; }
-    td.cours { cursor: pointer; background-color: #e0d4f7; }
-    #reservation {
-      display: none;
-      border: 2px solid #981ADA; background: #f8f0fd; padding: 15px; margin-top: 20px;
-      max-width: 400px;
-    }
-    #places button {
-      margin: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-    #places button.reserved {
-      background-color: red;
-      color: white;
-      cursor: default;
-    }
-    #message { color: green; margin-top: 10px; }
-    #annulerResa {
-      margin-top: 10px; background: #981ADA; color: white; border: none; padding: 8px 12px; cursor: pointer;
-      display: none;
-    }
+    body {
+  font-family: Arial, sans-serif;
+  max-width: 900px;
+  margin: 20px auto;
+  font-size: 16px; /* taille de base */
+}
 
-    /* CSS responsive */
-    @media (max-width: 600px) {
-      body {
-        margin: 10px 5px;
-        max-width: 100%;
-        font-size: 18px; /* un peu plus grand */
-      }
-      #connexion, #choixQ, #reservation {
-        width: 100% !important;
-        box-sizing: border-box;
-        padding: 15px !important; /* plus d’espace à l’intérieur */
-        font-size: 18px;
-      }
-      label, input, select, button {
-        font-size: 18px !important;
-      }
-      input[type="text"], select {
-        width: 100% !important;
-        padding: 10px !important;
-        margin-top: 6px;
-        margin-bottom: 12px;
-      }
-      table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        font-size: 18px; /* texte plus grand dans le tableau */
-      }
-      th, td {
-        padding: 14px 8px;
-      }
-      button {
-        padding: 14px 20px;
-        font-size: 18px;
-      }
-      #places button {
-        display: block;
-        margin: 10px 0;
-        width: 100%;
-      }
+h1 {
+  text-align: center;
+  color: #981ADA;
+  max-width: 600px;    /* Limite la largeur du titre */
+  margin: 0 auto 20px; /* Centre et ajoute un espace en bas */
+  word-wrap: break-word; /* Permet au texte de revenir à la ligne si trop long */
+  font-size: 24px;     /* Taille raisonnable du texte */
+}
+
+#connexion, #choixQ {
+  margin: 10px auto;
+  padding: 10px;
+  border: 2px solid #981ADA;
+  background: #f8f0fd;
+  width: 320px;
+  max-width: 90vw; /* limite largeur pour petits écrans */
+  text-align: center;
+  font-size: 16px;
+}
+
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  body {
+    margin: 10px 5px;
+    max-width: 100%;
+    font-size: 16px; /* garde taille stable */
+  }
+  #connexion, #choixQ, #reservation {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 15px !important;
+    font-size: 16px; /* taille stable */
+  }
+  label, input, select, button {
+    font-size: 16px; /* pas trop gros */
+  }
+  input[type="text"], select {
+    width: 100% !important;
+    padding: 10px !important;
+    margin-top: 6px;
+    margin-bottom: 12px;
+  }
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 16px; /* taille stable */
+  }
+  th, td {
+    padding: 14px 8px;
+  }
+  button {
+    padding: 12px 18px;
+    font-size: 16px;
+  }
+  #places button {
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+  }
     }
   </style>
 </head>
@@ -305,6 +305,7 @@ const emplois = {
 
 </body>
 </html>
+
 
 
 
